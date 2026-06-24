@@ -60,13 +60,32 @@ def scene_html(params: dict) -> str:
 </div>
 <div id="tip" class="panel">drag to orbit · scroll to zoom</div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>if(typeof THREE==='undefined'){document.write('<scr'+'ipt src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"><\/scr'+'ipt>');}</script>
+<script>if(typeof THREE==='undefined'){document.write('<scr'+'ipt src="https://unpkg.com/three@0.128.0/build/three.min.js"><\/scr'+'ipt>');}</script>
 <script>
 const P = __PARAMS__;
 const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
 const map=(v,a,b,c,d)=>c+(d-c)*clamp((v-a)/(b-a),0,1);
 const lerp=(a,b,t)=>a+(b-a)*t;
 
+// ---------------- HUD (filled first, so the live values show even if WebGL is unavailable) ----------------
+const ratio=P.coating/Math.max(P.target,1);
+document.getElementById('vSpeed').textContent=P.speed.toFixed(0);
+document.getElementById('vPress').textContent=P.pressure.toFixed(1);
+document.getElementById('vGap').textContent=P.gap.toFixed(1);
+document.getElementById('vCoat').textContent=P.coating.toFixed(1);
+document.getElementById('vTgt').textContent=P.target.toFixed(0);
+const oc=clamp((ratio-1)*100,-20,40);
+const qfill=document.getElementById('qfill');
+qfill.style.width=map(Math.abs(P.coating-P.target),0,P.target*0.3,8,100).toFixed(0)+'%';
+qfill.style.background=P.on_target?'#3fe08a':(ratio>1.10?'#ff5a3c':'#ffcf5a');
+const badge=document.getElementById('badge');
+badge.className='panel '+(P.on_target?'ok':'bad');
+badge.textContent=P.on_target?'\u25CF ON TARGET':('\u25B2 OVER-COATING +'+oc.toFixed(1)+'%');
+
 const cv=document.getElementById('c');
+try {
+if(typeof THREE==='undefined') throw new Error('three.js did not load');
 const renderer=new THREE.WebGLRenderer({canvas:cv,antialias:true,alpha:true});
 renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
 renderer.toneMapping=THREE.ACESFilmicToneMapping; renderer.toneMappingExposure=1.12;
@@ -99,8 +118,8 @@ const topBeamG=new THREE.BoxGeometry(5.6,0.26,0.26);
 const pot=new THREE.Mesh(new THREE.BoxGeometry(4.6,1.9,3.2),
   new THREE.MeshStandardMaterial({color:0x262b31,metalness:0.9,roughness:0.38}));
 pot.position.y=-1.55; scene.add(pot);
-const rim=new THREE.Mesh(new THREE.TorusGeometry(2.05,0.10,12,40),safety); // hazard rim
-rim.rotation.x=Math.PI/2; rim.position.y=-0.58; rim.scale.z=0.72; scene.add(rim);
+const potRim=new THREE.Mesh(new THREE.TorusGeometry(2.05,0.10,12,40),safety); // hazard rim
+potRim.rotation.x=Math.PI/2; potRim.position.y=-0.58; potRim.scale.z=0.72; scene.add(potRim);
 // molten surface (animated emissive)
 const moltenMat=new THREE.MeshStandardMaterial({color:0xff6a00,emissive:0xff4a00,emissiveIntensity:1.5,
   metalness:0.5,roughness:0.25});
@@ -136,7 +155,6 @@ const strip=new THREE.Mesh(new THREE.BoxGeometry(W,8.2,0.06),
 strip.position.y=1.7; scene.add(strip);
 
 // ---------------- coating sheath (deposited zinc above the knives) ----------------
-const ratio=P.coating/Math.max(P.target,1);
 let col=0x9effc4, em=0x3fe08a;                    // on-target: green
 if(ratio>1.10){col=0xff6a4c;em=0xff3a1e;}         // heavy over-coat: red
 else if(ratio>1.03){col=0xffd24a;em=0xffb020;}    // mild over-coat: amber
@@ -181,20 +199,6 @@ scene.add(fume);
 const NS=70, spark=pts(NS,0.05,0xffe6a0,0.9), spa=spark.geometry.attributes.position.array, sv=[];
 for(let i=0;i<NS;i++){spa[i*3]=(Math.random()-0.5)*W;spa[i*3+1]=-0.05;spa[i*3+2]=(Math.random()-0.5)*0.3;sv.push([(Math.random()-0.5)*0.04,0.02+Math.random()*0.05,(Math.random()-0.5)*0.04]);}
 scene.add(spark);
-
-// ---------------- HUD ----------------
-document.getElementById('vSpeed').textContent=P.speed.toFixed(0);
-document.getElementById('vPress').textContent=P.pressure.toFixed(1);
-document.getElementById('vGap').textContent=P.gap.toFixed(1);
-document.getElementById('vCoat').textContent=P.coating.toFixed(1);
-document.getElementById('vTgt').textContent=P.target.toFixed(0);
-const oc=clamp((ratio-1)*100,-20,40);
-const qfill=document.getElementById('qfill');
-qfill.style.width=map(Math.abs(P.coating-P.target),0,P.target*0.3,8,100).toFixed(0)+'%';
-qfill.style.background=P.on_target?'#3fe08a':(ratio>1.10?'#ff5a3c':'#ffcf5a');
-const badge=document.getElementById('badge');
-badge.className='panel '+(P.on_target?'ok':'bad');
-badge.textContent=P.on_target?'\u25CF ON TARGET':('\u25B2 OVER-COATING +'+oc.toFixed(1)+'%');
 
 // ---------------- camera (damped orbit + presets) ----------------
 let tgt={r:13,th:0.72,ph:1.12,fx:0,fy:0.8};            // target spherical + focus
@@ -252,6 +256,16 @@ function animate(){
   applyCam(); renderer.render(scene,cam);
 }
 window.addEventListener('resize',resize); resize(); applyCam(); animate();
+} catch(err){
+  console.error('twin 3-D init failed:', err);
+  cv.style.display='none';
+  const m=document.createElement('div');
+  m.style.cssText='position:absolute;inset:0;display:flex;align-items:center;justify-content:center;'+
+    'text-align:center;padding:24px;color:#9fb8d0;font-size:13px;line-height:1.6';
+  m.innerHTML='The 3-D view could not start in this browser (WebGL disabled or the graphics script was blocked).<br>'+
+    'The live coating values are shown above, and every other tab works normally.';
+  document.body.appendChild(m);
+}
 </script></body></html>
 """
     return html.replace("__PARAMS__", data)
