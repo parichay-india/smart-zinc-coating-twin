@@ -17,8 +17,22 @@ DEFAULTS = dict(processSpeed=86.0, width=1007.0, thickness=0.8,
 
 
 def load_bundle(path):
-    """Return the model bundle dict (model, features, target, conformal_q90, phys_coef, phys_vars, benchmark...)."""
-    return joblib.load(path)
+    """Return the model bundle dict (model, features, target, conformal_q90, phys_coef, phys_vars, benchmark...).
+
+    The model is a pickled scikit-learn estimator and only loads under a matching scikit-learn
+    version. If the installed version differs from the one the bundle was built with, the load
+    raises a clear message instead of an opaque ModuleNotFoundError.
+    """
+    try:
+        return joblib.load(path)
+    except (ModuleNotFoundError, ImportError, AttributeError) as e:
+        import sklearn
+        raise RuntimeError(
+            f"Could not load the model bundle ({type(e).__name__}: {e}). This almost always means "
+            f"the installed scikit-learn ({sklearn.__version__}) does not match the version the model "
+            f"was trained with. Pin that exact version in requirements.txt, or regenerate the model "
+            f"with train_models.py under the installed version."
+        ) from e
 
 
 def _physics_feature(bundle, x):

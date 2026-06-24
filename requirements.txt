@@ -1,9 +1,13 @@
-# Smart Zinc Coating Digital Twin — runtime dependencies for the Streamlit app.
-# The app loads a pre-trained PG-HGBT bundle, so only scikit-learn (+ the usual stack) is needed at runtime.
-# To RE-TRAIN the model from data, also install requirements-train.txt.
+# Smart Zinc Coating Digital Twin (GAUGE) — runtime dependencies for the Streamlit app.
+#
+# IMPORTANT: scikit-learn is PINNED to the exact version the shipped model was trained with.
+# A pickled scikit-learn model only loads under a matching version; an unpinned install picks
+# the latest (e.g. 1.9.x -> 1.10), whose internal modules differ and cause
+# "ModuleNotFoundError: No module named '_loss'". If you retrain with a different scikit-learn,
+# update BOTH the model file and this pin so they agree.
 streamlit>=1.36
-scikit-learn>=1.6
-numpy>=1.26
+scikit-learn==1.9.0
+numpy>=2.0
 pandas>=2.0
 plotly>=5.20
 joblib>=1.3
