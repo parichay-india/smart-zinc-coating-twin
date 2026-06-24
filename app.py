@@ -1,4 +1,4 @@
-"""Smart Zinc Coating Digital Twin — HDGL, CRM-III
+"""Smart Zinc Coating Digital Twin
 A physics-backed, game-like 3-D Streamlit emulator for the air-knife coating process:
 live coating soft-sensing (PG-HGBT) with calibrated conformal uncertainty, a closed-loop
 minimum-zinc set-point recommendation, a full 16-model comparison, a physics explainer and
@@ -16,7 +16,7 @@ import model_utils
 from twin3d import scene_html
 
 # --------------------------------------------------------------------------------------
-st.set_page_config(page_title="Smart Zinc Coating Digital Twin — HDGL CRM-III",
+st.set_page_config(page_title="Smart Zinc Coating Digital Twin",
                    page_icon="🏭", layout="wide", initial_sidebar_state="expanded")
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -67,7 +67,7 @@ best   = bench[0] if bench else {"Model": "PG-HGBT (ours)", "R2": 0.9037}
 
 st.markdown(
     '<div class="hero"><h1>🏭 Smart Zinc Coating — Physics-Backed Digital Twin</h1>'
-    '<p>HDGL · CRM-III · SAIL Bokaro &nbsp;|&nbsp; live air-knife soft-sensing (PG-HGBT) with conformal uncertainty, '
+    '<p>&nbsp;|&nbsp; live air-knife soft-sensing (PG-HGBT) with conformal uncertainty, '
     'closed-loop set-point optimisation, a 16-model comparison and quantified zinc savings.</p></div>',
     unsafe_allow_html=True)
 
@@ -275,13 +275,11 @@ tonnes of zinc per year — with coating held within specification.
 with tabs[5]:
     st.subheader("About this project")
     st.markdown("""
-**Smart Zinc Coating Optimization using AI-based Modelling at HDGL, CRM-III** restores automatic, on-target
+**Smart Zinc Coating Optimization using AI-based Modelling** restores automatic, on-target
 coating control on a hot-dip galvanizing line — entirely in software — after the physical coating gauge became
 unavailable. It combines IoT data acquisition, a physics-backed digital twin, a rigorously selected machine-learning
 soft sensor (**PG-HGBT**) and model-predictive control, delivering auditable, quantified zinc savings.
 
-- **Plant:** SAIL · Bokaro Steel Plant · Cold Rolling Mill-III · HDGL
-- **IP:** subject of a filed Indian patent (coating soft-sensor & air-knife control)
 - **Artefacts:** manuscript (IEEE TII), Colab notebook (EDA + 16-model benchmark + export), and this app.
 
 *Engineering demonstration. The 3-D scene is an illustrative emulator; figures derive from the project dataset.
