@@ -1,0 +1,114 @@
+[
+ {
+  "Model": "PG-HGBT (ours)",
+  "Family": "Physics-guided ensemble",
+  "R2": 0.9037,
+  "MAE": 6.523,
+  "RMSE": 8.82
+ },
+ {
+  "Model": "ExtraTrees",
+  "Family": "Ensemble",
+  "R2": 0.9026,
+  "MAE": 6.272,
+  "RMSE": 8.871
+ },
+ {
+  "Model": "PG-HGBT single",
+  "Family": "Physics-guided",
+  "R2": 0.8988,
+  "MAE": 6.662,
+  "RMSE": 9.043
+ },
+ {
+  "Model": "Blend (RF+HGB)",
+  "Family": "Ensemble",
+  "R2": 0.8971,
+  "MAE": 6.967,
+  "RMSE": 9.121
+ },
+ {
+  "Model": "RandomForest",
+  "Family": "Ensemble",
+  "R2": 0.897,
+  "MAE": 6.804,
+  "RMSE": 9.124
+ },
+ {
+  "Model": "XGBoost",
+  "Family": "Boosting",
+  "R2": 0.8934,
+  "MAE": 7.124,
+  "RMSE": 9.281
+ },
+ {
+  "Model": "LightGBM",
+  "Family": "Boosting",
+  "R2": 0.8933,
+  "MAE": 7.12,
+  "RMSE": 9.287
+ },
+ {
+  "Model": "CatBoost",
+  "Family": "Boosting",
+  "R2": 0.8901,
+  "MAE": 7.304,
+  "RMSE": 9.423
+ },
+ {
+  "Model": "HistGB",
+  "Family": "Boosting",
+  "R2": 0.8894,
+  "MAE": 7.294,
+  "RMSE": 9.453
+ },
+ {
+  "Model": "MLP",
+  "Family": "Deep learning",
+  "R2": 0.8883,
+  "MAE": 7.344,
+  "RMSE": 9.502
+ },
+ {
+  "Model": "Linear",
+  "Family": "Classical",
+  "R2": 0.874,
+  "MAE": 7.871,
+  "RMSE": 10.093
+ },
+ {
+  "Model": "Ridge",
+  "Family": "Classical",
+  "R2": 0.874,
+  "MAE": 7.871,
+  "RMSE": 10.093
+ },
+ {
+  "Model": "GaussianProcess",
+  "Family": "Probabilistic",
+  "R2": 0.8707,
+  "MAE": 7.994,
+  "RMSE": 10.223
+ },
+ {
+  "Model": "SVR",
+  "Family": "Kernel",
+  "R2": 0.8631,
+  "MAE": 8.194,
+  "RMSE": 10.518
+ },
+ {
+  "Model": "k-NN",
+  "Family": "Classical",
+  "R2": 0.8295,
+  "MAE": 9.146,
+  "RMSE": 11.737
+ },
+ {
+  "Model": "Physics-only (power law)",
+  "Family": "Physics",
+  "R2": 0.7576,
+  "MAE": 10.432,
+  "RMSE": 13.995
+ }
+]
