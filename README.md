@@ -1,4 +1,4 @@
-# Smart Zinc Coating — Physics-Backed Digital Twin (HDGL · CRM-III)
+# Smart Zinc Coating — Physics-Backed Digital Twin
 
 A game-like, 3-D Streamlit digital twin of the **air-knife coating section** of a continuous
 hot-dip galvanizing line. It runs the **PG-HGBT** soft sensor — a *physics-guided* model that
